@@ -51,7 +51,7 @@ const fetchForeignDataFx = createEffect(
   }
 );
 
-const $foreignData = restore<{ string: number[] }>(
+const $foreignData = restore<Record<string, number[]>>(
   fetchForeignDataFx.doneData,
   []
 );

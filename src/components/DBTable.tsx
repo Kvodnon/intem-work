@@ -1,4 +1,4 @@
-import { Button, Form, Spin, Table, Typography } from "antd";
+import { Button, Form, Popconfirm, Spin, Table, Typography } from "antd";
 import dayjs from "dayjs";
 import { useStore } from "effector-react";
 import { tableModel } from "entities/Table/model";
@@ -45,6 +45,10 @@ export const DBTable: React.FC = () => {
     );
     tableModel.updateData([...data, newData]);
     setCount(count + 1);
+  };
+
+  const cancel = () => {
+    setEditingKey("");
   };
 
   const save = async (key: string) => {
@@ -101,6 +105,9 @@ export const DBTable: React.FC = () => {
             >
               Save
             </Typography.Link>
+            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+              <a>Cancel</a>
+            </Popconfirm>
           </span>
         ) : (
           <Typography.Link
