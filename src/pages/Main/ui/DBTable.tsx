@@ -62,6 +62,8 @@ export const DBTable: React.FC = () => {
 
     if (item.id) {
       deleteRowModel.deleteRow(item.id);
+    } else {
+      tableModel.updateData(newData);
     }
   };
 
