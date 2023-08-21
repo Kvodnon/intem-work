@@ -34,6 +34,11 @@ sample({
   clock: saveRowFx.done,
   target: openMessageFx,
 });
+sample({
+  clock: saveRowFx.done,
+  source: tableModel.$currentTable,
+  target: tableModel.getTableData,
+});
 
 sample({
   clock: saveRow,

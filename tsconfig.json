@@ -21,7 +21,8 @@
       "shared/*": ["shared/*"],
       "features/*": ["features/*"],
       "entities/*": ["entities/*"],
-      "widgets/*": ["widgets/*"]
+      "widgets/*": ["widgets/*"],
+      "pages/*": ["pages/*"]
     }
   },
   "include": ["src"]

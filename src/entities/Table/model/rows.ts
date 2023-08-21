@@ -1,5 +1,6 @@
 import { createEffect, createEvent, restore, sample } from "effector";
 import { supabase } from "shared/api/supabase";
+import { TRecord } from "shared/types";
 import { TTables } from "../../../types";
 import { $columns, IColumn } from "./columns";
 import { $foreignTableNames, IForeignRelates } from "./foreign";
@@ -10,7 +11,7 @@ const getTableDataFx = createEffect(async (tableName: TTables) => {
   const { data } = await supabase.from(tableName).select();
   return data?.map((v, i) => ({ ...v, key: i.toString() })) || [];
 });
-const $rows = restore<Record<string, any>[]>(getTableDataFx.doneData, []);
+const $rows = restore<TRecord[]>(getTableDataFx.doneData, []);
 
 $rows.reset(getTableData);
 
@@ -19,7 +20,7 @@ sample({
   target: getTableDataFx,
 });
 
-const updateData = createEvent<Record<string, any>[]>();
+const updateData = createEvent<TRecord[]>();
 
 const $isPendingData = getTableDataFx.pending;
 

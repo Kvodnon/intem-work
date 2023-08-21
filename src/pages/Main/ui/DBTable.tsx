@@ -1,10 +1,12 @@
-import { Button, Form, Popconfirm, Spin, Table, Typography } from "antd";
+import { Button, Form, Popconfirm, Space, Spin, Table, Typography } from "antd";
 import dayjs from "dayjs";
 import { useStore } from "effector-react";
 import { tableModel } from "entities/Table/model";
 import { EditableCell } from "entities/Table/ui/EditableCell";
+import { deleteRowModel } from "features/delete-row/model";
 import { saveRowModel } from "features/save-row/model";
 import { useEffect, useState } from "react";
+import { TRecord } from "shared/types";
 
 export const DBTable: React.FC = () => {
   const [form] = Form.useForm();
@@ -18,8 +20,8 @@ export const DBTable: React.FC = () => {
   }, [data]);
 
   const [editingKey, setEditingKey] = useState("");
-  const isEditing = (record: any) => record.key === editingKey;
-  const edit = (record: any) => {
+  const isEditing = (record: TRecord) => record.key === editingKey;
+  const edit = (record: TRecord) => {
     const newRecord = { ...record };
 
     Object.keys(record).forEach((v) => {
@@ -49,6 +51,18 @@ export const DBTable: React.FC = () => {
 
   const cancel = () => {
     setEditingKey("");
+  };
+  const handleDelete = (key: string) => {
+    const newData = [...data];
+    const index = newData.findIndex((item) => key === item.key);
+
+    const item = newData[index];
+
+    newData.splice(index, 1);
+
+    if (item.id) {
+      deleteRowModel.deleteRow(item.id);
+    }
   };
 
   const save = async (key: string) => {
@@ -80,7 +94,7 @@ export const DBTable: React.FC = () => {
     editable: true,
     dataIndex: v,
     title: v,
-    onCell: (record: any) => ({
+    onCell: (record: TRecord) => ({
       ...record,
       inputType: "text",
       dataIndex: v,
@@ -93,7 +107,7 @@ export const DBTable: React.FC = () => {
     mergedColumns.push({
       title: "Action",
       dataIndex: "action",
-      render: (_: any, record: any) => {
+      render: (_: any, record: TRecord) => {
         const editable = isEditing(record);
         return editable ? (
           <span>
@@ -110,12 +124,20 @@ export const DBTable: React.FC = () => {
             </Popconfirm>
           </span>
         ) : (
-          <Typography.Link
-            disabled={editingKey !== ""}
-            onClick={() => edit(record)}
-          >
-            Edit
-          </Typography.Link>
+          <Space size="middle">
+            <Typography.Link
+              disabled={editingKey !== ""}
+              onClick={() => edit(record)}
+            >
+              Edit
+            </Typography.Link>
+            <Typography.Link
+              disabled={editingKey !== ""}
+              onClick={() => handleDelete(record.key)}
+            >
+              Delete
+            </Typography.Link>
+          </Space>
         );
       },
     });
